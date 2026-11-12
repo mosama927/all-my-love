@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Just Us ❤️</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- GLOBAL BACKGROUND LAYERS (persist across all screens)         -->
+<!-- ============================================================ -->
+<div class="bg-layer" id="bgLayer">
+  <div class="bg-gradient"></div>
+  <canvas id="starsCanvas"></canvas>
+  <canvas id="heartsCanvas"></canvas>
+  <canvas id="particlesCanvas"></canvas>
+  <div class="bg-vignette"></div>
+</div>
+
+<!-- Custom cursor (desktop only) -->
+<div class="custom-cursor" id="customCursor"></div>
+<div class="cursor-heart-trail" id="cursorHeart">❤</div>
+
+<!-- Sound assets -->
+<audio id="sfxBookOpen" src="sounds/book-open.mp3" preload="none"></audio>
+<audio id="sfxBookClose" src="sounds/book-close.mp3" preload="none"></audio>
+<audio id="sfxPageFlip" src="sounds/page-flip.mp3" preload="none"></audio>
+<audio id="sfxClick" src="sounds/click.mp3" preload="none"></audio>
+<audio id="sfxSuccess" src="sounds/success.mp3" preload="none"></audio>
+<audio id="sfxPuzzleComplete" src="sounds/puzzle-complete.mp3" preload="none"></audio>
+<audio id="sfxReward" src="sounds/reward.mp3" preload="none"></audio>
+<audio id="sfxConfetti" src="sounds/confetti.mp3" preload="none"></audio>
+<audio id="sfxTyping" src="sounds/typing.mp3" preload="none" loop></audio>
+<audio id="sfxAmbient" src="sounds/ambient.mp3" preload="none" loop></audio>
+<audio id="sfxDrag" src="sounds/drag.mp3" preload="none"></audio>
+<audio id="sfxUnlock" src="sounds/unlock.mp3" preload="none"></audio>
+<audio id="sfxError" src="sounds/error.mp3" preload="none"></audio>
+<audio id="bgMusic" src="music.mp3" preload="none" loop></audio>
+
+<!-- ============================================================ -->
+<!-- SCREEN 1 — LOGIN (THE BOOK)                                   -->
+<!-- ============================================================ -->
+<main id="screen-login" class="screen active">
+  <div class="login-stage">
+    <div class="book-wrap" id="bookWrap">
+      <div class="book" id="theBook">
+
+        <!-- Back cover / pages block sits behind the front cover -->
+        <div class="book-pages-block">
+          <div class="page-stack-page p1"></div>
+          <div class="page-stack-page p2"></div>
+          <div class="page-stack-page p3"></div>
+          <div class="book-inner-content">
+            <div class="inner-glow"></div>
+            <p class="inner-words">Just Us</p>
+            <span class="inner-heart">❤</span>
+          </div>
+        </div>
+
+        <!-- Front cover -->
+        <div class="book-cover" id="bookCover">
+          <div class="cover-frame">
+            <div class="cover-corner tl"></div>
+            <div class="cover-corner tr"></div>
+            <div class="cover-corner bl"></div>
+            <div class="cover-corner br"></div>
+            <h1 class="cover-title">Just Us</h1>
+            <div class="cover-heart">❤</div>
+            <div class="lock-assembly" id="lockAssembly">
+              <div class="lock-plate">
+                <div class="keyhole"></div>
+              </div>
+            </div>
+
+            <form id="loginForm" class="login-form" autocomplete="off">
+              <input
+                type="password"
+                id="passwordInput"
+                class="password-input"
+                placeholder="أدخل كلمة السر"
+                aria-label="كلمة السر"
+                dir="rtl"
+              />
+              <button type="submit" class="unlock-btn" id="unlockBtn">
+                <span>افتح القلب</span>
+              </button>
+            </form>
+            <p class="error-message" id="errorMessage">كلمة السر غير صحيحة، حاول مرة أخرى ❤</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <p class="login-hint">دقّي كلمة السر وافتحي القصة ✨</p>
+  </div>
+</main>
+
+<!-- ============================================================ -->
+<!-- SCREEN 2 — INTRO                                              -->
+<!-- ============================================================ -->
+<main id="screen-intro" class="screen">
+  <div class="intro-stage">
+    <div class="intro-hearts-mini" aria-hidden="true">
+      <span>❤</span><span>❤</span><span>❤</span><span>❤</span>
+    </div>
+    <h1 class="intro-logo">Just Us <span class="intro-heart">❤</span></h1>
+    <div class="intro-underline"></div>
+  </div>
+</main>
+
+<!-- ============================================================ -->
+<!-- SCREEN 3 — HOME                                               -->
+<!-- ============================================================ -->
+<main id="screen-home" class="screen">
+  <header class="home-header">
+    <h1 class="home-title">أهلاً بيك <span class="glow-word">من جديد</span> ❤</h1>
+    <p class="home-subtitle">كل يوم معاك صفحة جديدة في قصتنا</p>
+  </header>
+
+  <!-- LOVE COUNTER -->
+  <section class="love-counter glass-panel" aria-label="عداد الحب">
+    <p class="counter-label">من يوم ما بدأت حكايتنا</p>
+    <div class="counter-grid">
+      <div class="counter-cell">
+        <span class="counter-num" id="cYears">0</span>
+        <span class="counter-unit">سنة</span>
+      </div>
+      <div class="counter-cell">
+        <span class="counter-num" id="cMonths">0</span>
+        <span class="counter-unit">شهر</span>
+      </div>
+      <div class="counter-cell">
+        <span class="counter-num" id="cDays">0</span>
+        <span class="counter-unit">يوم</span>
+      </div>
+      <div class="counter-cell">
+        <span class="counter-num" id="cHours">0</span>
+        <span class="counter-unit">ساعة</span>
+      </div>
+      <div class="counter-cell">
+        <span class="counter-num" id="cMinutes">0</span>
+        <span class="counter-unit">دقيقة</span>
+      </div>
+      <div class="counter-cell">
+        <span class="counter-num" id="cSeconds">0</span>
+        <span class="counter-unit">ثانية</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- NAV CARDS -->
+  <section class="home-cards" aria-label="القائمة الرئيسية">
+    <button class="nav-card" data-target="screen-message">
+      <span class="nav-card-icon">❤️</span>
+      <span class="nav-card-title">رسالة</span>
+    </button>
+    <button class="nav-card" data-target="screen-gallery">
+      <span class="nav-card-icon">📷</span>
+      <span class="nav-card-title">معرض الصور</span>
+    </button>
+    <button class="nav-card" data-target="screen-momentbook">
+      <span class="nav-card-icon">📖</span>
+      <span class="nav-card-title">دفتر اللحظات</span>
+    </button>
+    <button class="nav-card" data-target="screen-video">
+      <span class="nav-card-icon">🎥</span>
+      <span class="nav-card-title">فيديو</span>
+    </button>
+    <button class="nav-card" data-target="screen-puzzle">
+      <span class="nav-card-icon">🧩</span>
+      <span class="nav-card-title">لعبة البازل</span>
+    </button>
+    <button class="nav-card" data-target="screen-secret">
+      <span class="nav-card-icon">🔐</span>
+      <span class="nav-card-title">سرّ خاص</span>
+    </button>
+  </section>
+
+  <!-- MUSIC CONTROL -->
+  <div class="music-control glass-panel" id="musicControl">
+    <button class="music-toggle" id="musicToggle" aria-label="تشغيل/إيقاف الموسيقى">
+      <span class="music-icon" id="musicIcon">♪</span>
+    </button>
+    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="40" aria-label="مستوى الصوت">
+    <button class="music-mute" id="muteToggle" aria-label="كتم الصوت">🔇</button>
+  </div>
+</main>
+
+<!-- ============================================================ -->
+<!-- SCREEN 4 — MESSAGE                                            -->
+<!-- ============================================================ -->
+<main id="screen-message" class="screen">
+  <button class="back-btn" data-target="screen-home">→ رجوع</button>
+  <div class="letter-stage">
+    <div class="letter-paper">
+      <div class="letter-texture"></div>
+      <div class="letter-content" id="letterContent">
+       
+        عزيزتي التي أُحب إلي أخر أنفاسي، التي دوما ما كانت وجهتي في كل خطوة 
+لست مثاليا ولم أكن يوما أبحث عنها كل ما أردت فعله هو أن أكون حبيب جيد لدي بعض الأخطاء ,أنا مُخطيء لكنني غير مدرك 
+أتصرف بعشوائية وتلقائية، تلك التي تجعل أفعالي تتسم ببعض الآثار النفسية ,أفقد جزءا من عقلي كل يوم 
+فأنسي الكثير كل يوم أكثر مما مضي ,أفقد جزءا من عقلي فأتسم بالمزيد من العشوائية ,أفقد كل شيء لكنني
+لم أفقد او أفتقد طيفك في لحظه ,لم يحدث أن أفتقد حبك يوما أو عينيك أو لونهما ,ولم يحدث أن مقدار حبي لك قد انتُقِص يوما
+أتدرين كم عمري 
+أوتدرين كم من العمر أكملنا معا ؟!! 
+لم أكن يوما لأتلاعب بعلاقتنا 
+ولم أفكر خِلسة أن يحدث 
+كل ما أريده هو أن نكمل حياتنا معا الي أخر العمر ,حتي ولو تشاجرنا كل يوم 
+كل ما أريده هو أن تحتوي قلبي وأرى في عينيكي انني مرادك كما انكي مرادي
+لم أتخيل يوم ولم يجرؤ عقلي علي أن يتوقع فقدانك 
+ولم أستطع يوما أن أرسم لوحة دونك 
+فأنا الذي أخبرتك مسبقا انني أعشق البدر ( اقصد وجهك)
+وأنني أُشيد كل يوم متحفا جديدا 
+لوحة جديدة 
+أوكنت تعلمين أنني لم احرك ساكنا من أسفلها ,وأنني لطالما تواريت في ظلها 
+أدرك ان الأمور صارت كالجحيم 
+وأريدك أن تعرفي أنني لم أكن يوما لأبخل ,بجهدي أو جسدي من أجل عينيك أو حتي روحي 
+ربما ترين الأمور من وجهتك لكنني أردت اخبارك أنني دوما ما أحببتك ودوما ما كان قلبي ينبض لعينيك  
+وأنك لي وطنا وروحا وحياة 
+!! 
+ 
+      
+      </div>
+      <span class="letter-cursor" id="letterCursor"></span>
+    </div>
+  </div>
+</main>
+
+<!-- ============================================================ -->
+<!-- SCREEN 5 — GALLERY                                            -->
+<!-- ============================================================ -->
+<main id="screen-gallery" class="screen">
+  <button class="back-btn" data-target="screen-home">→ رجوع</button>
+  <h2 class="section-title">معرض الصور</h2>
+  <div class="gallery-grid" id="galleryGrid">
+    <button class="gallery-item" data-full="images/1.jpg"><img src="images/1.jpg" alt="ذكرى 1" loading="lazy"></button>
+    <button class="gallery-item" data-full="images/2.jpg"><img src="images/2.jpg" alt="ذكرى 2" loading="lazy"></button>
+    <button class="gallery-item" data-full="images/3.jpg"><img src="images/3.jpg" alt="ذكرى 3" loading="lazy"></button>
+    <button class="gallery-item" data-full="images/4.jpg"><img src="images/4.jpg" alt="ذكرى 4" loading="lazy"></button>
+    <button class="gallery-item" data-full="images/5.jpg"><img src="images/5.jpg" alt="ذكرى 5" loading="lazy"></button>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">‹</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <button class="lightbox-nav lightbox-next" id="lightboxNext">›</button>
+  </div>
+</main>
+
+<!-- ============================================================ -->
+<!-- SCREEN 6 — MOMENT BOOK                                        -->
+<!-- ============================================================ -->
+<main id="screen-momentbook" class="screen">
+  <button class="back-btn" data-target="screen-home">→ رجوع</button>
+  <h2 class="section-title">دفتر اللحظات</h2>
+
+  <div class="moment-book-stage">
+    <div class="moment-book" id="momentBook">
+
+      <div class="moment-page" data-page="1">
+        <div class="moment-page-face front">
+          <img src="images/moment1.jpg" alt="لحظة 1" loading="lazy">
+          <p class="moment-text">
+عائلتنا الصغيرة ♥️ ♥️ </p>
+        </div>
+        <div class="moment-page-face back"></div>
+      </div>
+
+      <div class="moment-page" data-page="2">
+        <div class="moment-page-face front">
+          <img src="images/moment2.jpg" alt="لحظة 2" loading="lazy">
+          <p class="moment-text"> يمكن كل يوم ف وجودك بالنسبالي هو عيد 
+بس عيد ميلادك هو اليوم اللي بيخلي يومي عيدين لولاه مكناش هنبقي هنا 🫵♥️🥰.
+</p>
+        </div>
+        <div class="moment-page-face back"></div>
+      </div>
+
+      <div class="moment-page" data-page="3">
+        <div class="moment-page-face front">
+          <img src="images/moment3.jpg" alt="لحظة 3" loading="lazy">
+          <p class="moment-text">طب م يمكن منزله عشانك يفنانة 🥸
+ </p>
+        </div>
+        <div class="moment-page-face back"></div>
+      </div>
+
+      <div class="moment-page" data-page="4">
+        <div class="moment-page-face front">
+          <img src="images/moment4.jpg" alt="لحظة 4" loading="lazy">
+          <p class="moment-text"> ممكن امشي من غير فلوس 
+بس مقدرش امشي من غير صورتك 😞
+ </p>
+        </div>
+        <div class="moment-page-face back"></div>
+      </div>
+
+      <div class="moment-page" data-page="5">
+        <div class="moment-page-face front">
+          <img src="images/moment5.jpg" alt="لحظة 5" loading="lazy">
+          <p class="moment-text"> كل مقابلة بيننا بس ان القمر خد شيفت بالنهار ومش هيطلع بالليل 🌚🥰 ♥️</p>
+        </div>
+        <div class="moment-page-face back"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="moment-controls">
+    <button class="moment-btn" id="momentPrev">‹ السابقة</button>
+    <span class="moment-indicator" id="momentIndicator">1 / 5</span>
+    <button class="moment-btn" id="momentNext">التالية ›</button>
+  </div>
+</main>
+
+<!-- ============================================================ -->
+<!-- SCREEN 7 — VIDEO                                              -->
+<!-- ============================================================ -->
+<main id="screen-video" class="screen">
+  <button class="back-btn" data-target="screen-home">→ رجوع</button>
+  <h2 class="section-title">فيديو خاص</h2>
+
+  <div class="video-stage glass-panel">
+    <video id="loveVideo" class="love-video" src="videos/love.mp4" playsinline></video>
+    <div class="video-controls">
+      <button class="video-btn" id="videoPlayPause">▶</button>
+      <input type="range" id="videoSeek" class="video-seek" min="0" max="100" value="0">
+      <button class="video-btn" id="videoPip" title="صورة داخل صورة">⧉</button>
+      <button class="video-btn" id="videoFullscreen" title="ملء الشاشة">⛶</button>
+    </div>
+  </div>
+</main>
+
+<!-- ============================================================ -->
+<!-- SCREEN 8 — PUZZLE GAME                                        -->
+<!-- ============================================================ -->
+<main id="screen-puzzle" class="screen">
+  <button class="back-btn" data-target="screen-home">→ رجوع</button>
+
+  <div class="puzzle-hud glass-panel">
+    <div class="hud-item"><span class="hud-icon">❤️</span><span class="hud-label">مستوى</span><span class="hud-value" id="hudLevel">1</span></div>
+    <div class="hud-item"><span class="hud-icon">🎯</span><span class="hud-label">حركات</span><span class="hud-value" id="hudMoves">0</span></div>
+    <div class="hud-item"><span class="hud-icon">⏱</span><span class="hud-label">وقت</span><span class="hud-value" id="hudTimer">00:00</span></div>
+    <div class="hud-item"><span class="hud-icon">🏆</span><span class="hud-label">نقاط</span><span class="hud-value" id="hudScore">0</span></div>
+    <div class="hud-item hud-stars"><span class="hud-icon">⭐</span><span class="hud-label">نجوم</span><span class="hud-value" id="hudStars">☆☆☆☆☆</span></div>
+  </div>
+
+  <div class="puzzle-stage">
+    <div class="puzzle-board" id="puzzleBoard"></div>
+  </div>
+
+  <!-- Level complete popup -->
+  <div class="popup-overlay" id="levelPopup">
+    <div class="popup-card glass-panel">
+      <h2 class="popup-title" id="popupTitle">أحسنت! ❤</h2>
+      <p class="popup-stars" id="popupStars">★★★★★</p>
+      <p class="popup-score">النقاط: <span id="popupScore">0</span></p>
+      <p class="popup-next" id="popupNext">جاري تحميل المستوى التالي...</p>
+    </div>
+  </div>
+
+  <!-- Final reward -->
+  <div class="popup-overlay" id="finalReward">
+    <canvas id="confettiCanvas"></canvas>
+    <div class="reward-card glass-panel">
+      <h2 class="reward-title">مبروك! ❤️</h2>
+      <p class="reward-text"> برااافوو.. 
+ كنت متأكد انك هتعدي كله بسهولة وبأعلي سكور عشان انتي شطورة
+حاولت اعمل حاجه ممتعة تفضل بيننا مهما الزمن قسي علينا ومهما الايام زهقتنا عشان تفضلي دايما متأكده اني بحبك لأخر نفس فيا  🥳♥️♥️♥️🥰
+</p>
+      <button class="reward-btn" id="rewardBackHome">رجوع للرئيسية</button>
+    </div>
+  </div>
+</main>
+
+<!-- ============================================================ -->
+<!-- SCREEN 9 — SECRET                                             -->
+<!-- ============================================================ -->
+<main id="screen-secret" class="screen">
+  <button class="back-btn" data-target="screen-home">→ رجوع</button>
+  <div class="secret-stage">
+    <div class="secret-card glass-panel">
+      <span class="secret-lock">🔐</span>
+      <p class="secret-text"> لو وصلتي هنا 
+ف انتي المفروض تكوني خلصتي كل الاقسام التانيه بما فيها البازل واتمني تكون عجبتك وقدرت ابسطك 
+يمكن مش هقول كلام كافي يوفي انا حاسس ب ايه تجاهك بس هحاول اعبر واقولك اني دايما بحلم باليوم اللي هنكون فيه ف نفس البيت وكمان يعني ان الدنيا بتكون فراغ ف غياب صوتك 
+يمكن بنتخانق كتير وانا مش احسن حاجه 
+بس انتي اجمل واحلي رحومة قابلتها ف حياتي، واجمل سنين عمري كانت ف وجودك بل عمري 
+اتمني اكون عملت ذكري حلوة تفضل ف بالك دايما 
+تأكدي دايما اني هكون.. حبيبك المحب دائما محمد🥰♥️</p>
+    </div>
+  </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
